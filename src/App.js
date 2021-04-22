@@ -1,25 +1,57 @@
-import logo from './logo.svg';
-import './App.css';
+import * as React from 'react';
+import { v4 as uuidv4 } from 'uuid';
+const { useState } = React;
+
+const TimerInput = () => {
+  return (
+    <div>
+      <div>
+        <label htmlFor="timerName">NAME</label>
+        <input type="text" name="timerName" id="timerName" />
+      </div>
+      <div>
+        <label htmlFor="timerDate">Date</label>
+        <input type="date" name="timerDate" id="timerDate"/>
+      </div>
+      <div>
+        <label htmlFor="timerTime">Time</label>
+        <input type="time" name="timerTime" id="timerTime"/>
+      </div>
+      <button type="submit">Start</button>
+    </div>
+  )
+}
+
+const countRemainingTime = (date, time) => {
+  let seconds = Math.round(date.getTime() / 1000);
+  let currentTime = seconds - 1;
+  return currentTime;
+}
 
 function App() {
+  const [timers, setTimers] = useState([{
+    name: "My next birthday",
+    id: uuidv4(),
+    date: new Date("01-10-2022"),
+    time: null
+  }])
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <TimerInput></TimerInput>
+      {
+        timers.length > 0 ?
+          <div>
+            <span>
+              {timers[0]["date"].toString()}
+            </span>
+          </div>: ""
+
+      }
     </div>
   );
 }
+
+
+
 
 export default App;
