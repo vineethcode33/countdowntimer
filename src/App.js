@@ -1,52 +1,72 @@
 import * as React from 'react';
+import "./App.css"
 import { v4 as uuidv4 } from 'uuid';
 const { useState } = React;
 
 const TimerInput = () => {
+
+  const [timerName, setTimerName] = useState("")
+  const [timerDate, setTimerDate] = useState("")
+  const [timerTime, setTimerTime] = useState("")
+  const [allTimers, setAllTimers] = useState([])
+
+
+  const handleSubmit = (e) => {
+    console.log("called on submit")
+    let existingTimers = [...allTimers]
+    existingTimers.push({
+      timerName, dateTime: new Date(timerDate + ' ' + timerTime), id: uuidv4()
+    })
+    console.log("existingTimers: ", existingTimers);
+    setAllTimers(existingTimers)
+    e.preventDefault()
+
+  }
+
+  console.log("timerName:", timerName);
+  console.log("timerDate:", timerDate);
+  console.log("timerTime:", timerTime);
+  console.log("allTimers:", allTimers);
+
+
   return (
-    <div>
-      <div>
-        <label htmlFor="timerName">NAME</label>
-        <input type="text" name="timerName" id="timerName" />
-      </div>
-      <div>
-        <label htmlFor="timerDate">Date</label>
-        <input type="date" name="timerDate" id="timerDate"/>
-      </div>
-      <div>
-        <label htmlFor="timerTime">Time</label>
-        <input type="time" name="timerTime" id="timerTime"/>
-      </div>
-      <button type="submit">Start</button>
+    <div className="CounterInputCard">
+      <form onSubmit={handleSubmit}>
+        <label htmlFor="timerName">Name:</label>
+        <input value={timerName} type="text" name="timerName" id="timerName" onChange={ (e) => setTimerName(e.target.value)}/>
+        <label htmlFor="timerDate">Date:</label>
+        <input value={timerDate} type="date" name="timerDate" id="timerDate" onChange={ (e) => setTimerDate(e.target.value)}/>
+        <label htmlFor="timerTime">Time:</label>
+        <input value={timerTime} type="time" name="timerTime" id="timerTime" onChange={ (e) => setTimerTime(e.target.value)}/>
+        <input type="submit" value='Start'/>
+        </form>
     </div>
   )
 }
 
-const countRemainingTime = (date, time) => {
-  let seconds = Math.round(date.getTime() / 1000);
-  let currentTime = seconds - 1;
-  return currentTime;
+const CountDownTimers = (allTimers) => {
+
+  return (
+    <div>
+      {
+        allTimers.map((timer) =>
+          <div>
+            <p>{timer.name}</p>
+            <p>{ timer.dateTime}</p>
+          </div>
+
+        )
+      }
+    </div>
+  )
 }
 
+
 function App() {
-  const [timers, setTimers] = useState([{
-    name: "My next birthday",
-    id: uuidv4(),
-    date: new Date("01-10-2022"),
-    time: null
-  }])
   return (
     <div className="App">
-      <TimerInput></TimerInput>
-      {
-        timers.length > 0 ?
-          <div>
-            <span>
-              {timers[0]["date"].toString()}
-            </span>
-          </div>: ""
-
-      }
+      <TimerInput ></TimerInput>
+      {/* <CountDownTimers {...allTimers}/> */}
     </div>
   );
 }
